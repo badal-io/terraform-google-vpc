@@ -27,6 +27,12 @@ variable "subnetworks" {
     default     = []
 }
 
+variable "secondary_ranges" {
+    description = "An array of configurations for secondary IP ranges for VM instances contained in this subnetwork. Must contain range_name and ip_cidr_range as properties"
+    type        = "map"
+    default     = {}
+}
+
 variable "module_dependency" {
   type        = "string"
   default     = ""

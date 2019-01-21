@@ -39,10 +39,52 @@ module "auto-vpc" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
+| name | Name for subnetwork, if not provided it will use region as name | string | - | no |
 | region | Region for subnet | string | - | yes|
 | cidr | Cidr range for subnet | - | yes |
 | enable_flow_logs | Enable flow logs for subnets (true/false). | string | "false" | no |
 | private_ip_google_access | Enable Private IP access to googleapis (true/false).| string | "true" | no |
+| secondary_ip_range | Provide secondary ranges | map | - | yes |
+
+#### secondary_ip_ranges
+
+if you don't want any secondary ranges than just give an empty map for the subnet. For Example,
+
+```
+module "vpc" {
+    source  = "github.com/muvaki/terraform-google-vpc"
+    
+    name    = "test-vpc"
+    project = "${var.project-id}"
+
+    subnetworks = [
+        {
+            region  = "us-central1"
+            cidr    = "10.100.0.0/20"
+        },
+        {
+            name    = "test"
+            region  = "us-east4"
+            cidr    = "10.0.0.0/24"
+        }
+    ]
+
+    secondary_ranges    = {
+        test    = []
+        us-central1 = [
+            {
+                range_name = "gke-services"
+                ip_cidr_range = "10.101.0.0/20"
+            },
+            {
+                range_name = "gke-pods"
+                ip_cidr_range = "10.200.0.0/14"
+            }
+        ]
+    }
+    auto_create_subnetworks = "false"
+}
+```
 
 ## Outputs
 
