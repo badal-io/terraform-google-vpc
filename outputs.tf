@@ -17,3 +17,13 @@ output "subnetworks_self_links" {
   value       = ["${google_compute_subnetwork.default.*.self_link}"]
   description = "the list of subnetworks which belong to the network"
 }
+
+output "service_network_address" {
+  value = "${google_compute_global_address.default.0.address}"
+  description = "Address of the service network"
+}
+
+output "service_network_selflink" {
+  value = "${google_compute_global_address.default.0.self_link}"
+  description = "Self Link of the service network"
+}

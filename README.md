@@ -8,7 +8,6 @@ Supports creating following:
 Future Considerations to add:
 - Shared VPC
 - Routing Support
-- Secondary Ranges
 
 ## Usage
 Example folder covers how to create VPC with either auto-created subnets or custom ones. The simplest config to get a VPC generated is shown below:
@@ -21,6 +20,12 @@ module "auto-vpc" {
 }
 ```
 
+## Beta Features
+This module supports the following beta features:
+- Private Service Ranges
+
+Ensure that your beta provider is set and named "google-beta"
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -30,6 +35,8 @@ module "auto-vpc" {
 | auto_create_subnetworks | If you want Google to auto provision the subnets (true/false). | string | "true" | no |
 | routing_mode |  Sets the network-wide routing mode for Cloud Routers to use. Accepted values are GLOBAL or REGIONAL. | string | "GLOBAL" | yes |
 | subnetworks |  A list of subnetworks created| list | [] | no |
+| secondary_ranges | An array of configurations for secondary IP ranges for VM instances contained in this subnetwork. Must contain range_name and ip_cidr_range as properties | map | {} | yes |
+| create_private_service_range | Setting this variable to true provisions a /16 block for Private Service Connection. Currently, custom ranges not supported by terraform | string | false | no |
 | module_dependency | Pass an output from another variable/module to create dependency | string | "" | no |
 
 
@@ -95,6 +102,8 @@ module "vpc" {
 | self_link | The URI of the VPC created. |
 | routing_mode |  Sets the network-wide routing mode for Cloud Routers to use. Accepted values are GLOBAL or REGIONAL. |
 | subnetworks_self_links | the list of subnetworks which belong to the network |
+| service_network_address | Address of the service network |
+| service_network_selflink | Self Link  of the service network |
 
 ## Docs:
 

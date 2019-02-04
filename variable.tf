@@ -33,6 +33,12 @@ variable "secondary_ranges" {
     default     = {}
 }
 
+variable "create_private_service_range" {
+    description = "Setting this variable to true provisions a /16 block for Private Service Connection. Currently, custom ranges not supported by terraform"
+    type        = "string"
+    default     = "false"
+}
+
 variable "module_dependency" {
   type        = "string"
   default     = ""
