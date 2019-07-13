@@ -9,6 +9,7 @@ variable "project" {
     default     = ""
 }
 
+# VPC Settings
 variable "auto_create_subnetworks" {
     description = "If set to true, this network will be created in auto subnet mode, and Google will create a subnet for each region automatically. If set to false, a custom subnetted network will be created that can support google_compute_subnetwork resources."
     type        = "string"
@@ -21,22 +22,44 @@ variable "routing_mode" {
     default     = "GLOBAL"
 }
 
+# Subnetworks
 variable "subnetworks" {
     description = "Define subnetwork detail for VPC"
-    type        = "list"
-    default     = []
+    type        = list(object({
+        name            = string   # name of the subnetwork
+        region          = string
+        cidr            = string   # The IP address range that machines in this network are assigned to, represented as a CIDR block.
+        secondary_ip_range = list(object({
+            name = string # The name associated with this subnetwork secondary range, used when adding an alias IP range to a VM instance.
+            cidr = string # The range of IP addresses belonging to this subnetwork secondary range.
+        }))
+    }))
+    default     = null
 }
 
-variable "secondary_ranges" {
-    description = "An array of configurations for secondary IP ranges for VM instances contained in this subnetwork. Must contain range_name and ip_cidr_range as properties"
-    type        = "map"
-    default     = {}
+variable "private_ip_google_access" {
+    description = "Whether the VMs in this subnet can access Google services without assigned external IP addresses."
+    type        = bool
+    default     = true
 }
 
-variable "create_private_service_range" {
-    description = "Setting this variable to true provisions a /16 block for Private Service Connection. Currently, custom ranges not supported by terraform"
-    type        = "string"
-    default     = "false"
+variable "enable_flow_logs" {
+    description = "Whether to enable flow logging for this subnetwork."
+    type        = bool
+    default     = true
+}
+
+# Private Service Connection
+
+variable "services_address" {
+    description = "This object sets Private service connection"
+    type        = list(object({
+        name        = string
+        description = string
+        address     = string
+        prefix      = number
+    }))
+    default = null
 }
 
 variable "module_dependency" {
